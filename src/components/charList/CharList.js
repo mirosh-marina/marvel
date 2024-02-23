@@ -1,41 +1,40 @@
 import "../charList/charList.scss";
 import MarvelService from "../../services/MarvelService";
-import { Component } from "react";
+import React, { Component } from "react";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import Spinner from "../spinner/Spinner";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
-class CharList extends Component {
-  
-    
-    state = {
-      charList: [],
-      loading: true,
-      error: false,
-      newItemLoading: false,
-      offset: 210,
-      charEnded: false
-  
-  }
+class CharList extends Component {  
+
+  state = {
+    charList: [],
+    loading: true,
+    error: false,
+    newItemLoading: false,
+    offset: 210,
+    charEnded: false,
+  };
 
   marvelService = new MarvelService();
 
   componentDidMount() {
-    window.addEventListener('scroll', this.autoButtonByScroll)
+    this.onRequest();
+    window.addEventListener("scroll", this.autoButtonByScroll);    
   }
 
-  componentWillMount() {
-    this.onRequest();
-    window.removeEventListener('scroll', this.autoButtonByScroll)
+  UNSAFE_componentWillMount() {
+    window.removeEventListener("scroll", this.autoButtonByScroll);
   }
 
   autoButtonByScroll = () => {
     if (
-      window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight
+      window.scrollY + document.documentElement.clientHeight >=
+      document.documentElement.scrollHeight
     ) {
-      this.onRequest(this.state.offset)
+      this.onRequest(this.state.offset);
     }
-  }
+  };
 
   onRequest = (offset) => {
     this.onCharListLoading();
@@ -57,12 +56,12 @@ class CharList extends Component {
       ended = true;
     }
 
-    this.setState(({offset, charList}) => ({
+    this.setState(({ offset, charList }) => ({
       charList: [...charList, ...newCharList],
       loading: false,
       newItemLoading: false,
-      offset: offset+9,
-      charEnded: ended
+      offset: offset + 9,
+      charEnded: ended,
     }));
   };
 
@@ -70,10 +69,20 @@ class CharList extends Component {
     this.setState({ error: true, loading: false });
   };
 
+  itemRefs = [];
+
+  setRef = (ref) => {
+    this.itemRefs.push(ref);    
+  }
+  
+  focusOnItem = (id) => {    
+    this.itemRefs.forEach(item => item.classList.remove('char__item_selected'));
+    this.itemRefs[id].classList.add('char__item_selected')
+  }  
   
 
-  allChar(arr) {    
-    const elements = arr.map((item) => {
+  allChar(arr) {
+    const elements = arr.map((item, index) => {
       let noImg = {};
       if (item.noThumbnailOne) {
         noImg = { objectFit: "contain", width: "235px" };
@@ -85,8 +94,12 @@ class CharList extends Component {
       return (
         <li
           key={item.id}
+          ref={this.setRef}
           className="char__item"
-          onClick={() => this.props.onCharSelected(item.id)}
+          onClick={() => {
+            this.props.onCharSelected(item.id); 
+            this.focusOnItem(index);           
+          }}
         >
           <img style={noImg} src={item.thumbnail} alt={item.name} />
           <div className="char__name">{item.name}</div>
@@ -97,7 +110,8 @@ class CharList extends Component {
   }
 
   render() {
-    const { charList, loading, error, offset, newItemLoading, charEnded } = this.state;
+    const { charList, loading, error, offset, newItemLoading, charEnded } =
+      this.state;
 
     const items = this.allChar(charList);
 
@@ -113,7 +127,7 @@ class CharList extends Component {
         <button
           disabled={newItemLoading}
           onClick={() => this.onRequest(offset)}
-          style={{"display": charEnded ? 'none' : 'block'}}
+          style={{ display: charEnded ? "none" : "block" }}
           className="button button__main button__long"
         >
           <div className="inner">load more</div>
@@ -124,7 +138,7 @@ class CharList extends Component {
 }
 
 CharList.propTypes = {
-  onCharSelected: PropTypes.func.isRequired
-}
+  onCharSelected: PropTypes.func.isRequired,
+};
 
 export default CharList;
