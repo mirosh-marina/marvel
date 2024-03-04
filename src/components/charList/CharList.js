@@ -1,5 +1,5 @@
 import "../charList/charList.scss";
-import MarvelService from "../../services/MarvelService";
+import useMarvelService from "../../services/MarvelService";
 import React, { useState, useEffect, useRef } from "react";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import Spinner from "../spinner/Spinner";
@@ -7,19 +7,18 @@ import PropTypes from "prop-types";
 
 const CharList = (props) => {
 	
-	const [charList, setCharList] = useState([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] =useState(false);
+	const [charList, setCharList] = useState([]);	
+	const [comicsList, setComicsList] = useState([]);	
 	const [newItemLoading, setNewItemLoading] = useState(true);
 	const [offset, setOffset] = useState(210);
 	const [charEnded, setCharEnded] = useState(false);
 	const [pageEnded, setPageEnded] = useState(false);
 
 
-  const marvelService = new MarvelService();
+  const {loading, error, getAllCharacters, getAllComics} = useMarvelService();
 
 	useEffect(() => {
-		onRequest();
+		onRequest(offset, true);
 		window.addEventListener("scroll", autoButtonByScroll);
 		return () => window.removeEventListener("scroll", autoButtonByScroll);
 	},[]); 
@@ -46,20 +45,15 @@ const CharList = (props) => {
     }
   };
 
-  const onRequest = (offset) => {
-    onCharListLoading();
-    marvelService
-      .getAllCharacters(offset)
-      .then(onCharListLoaded)
-      .catch(onError)
+  const onRequest = (offset, initial) => {
+		initial ? setNewItemLoading(false) : setNewItemLoading(true);    
+    
+      getAllCharacters(offset)
+      .then(onCharListLoaded)      
 			.finally(() => {
 				setNewItemLoading(false);
 				setPageEnded(false)
-			})
-  };
-
-  const onCharListLoading = () => {
-    setNewItemLoading(true);
+			});			
   };
 
   const onCharListLoaded = (newCharList) => {
@@ -68,18 +62,12 @@ const CharList = (props) => {
       ended = true;
     }
     
-		setCharList(charList => [...charList, ...newCharList]);
-		setLoading(loading => false);
+		setCharList(charList => [...charList, ...newCharList]);		
 		setNewItemLoading(newItemLoading => false);
 		setOffset(offset => offset + 9);
 		setCharEnded(charEnded => ended);
   };
-
-
-  const onError = () => {    
-		setError(error => true);
-		setLoading(loading => false)
-  };
+ 
 
   const itemRefs = useRef([]);
 
@@ -116,7 +104,7 @@ const CharList = (props) => {
             }
           }}
         >
-          <img style={noImg} src={item.thumbnail} alt={item.name} />
+          <img style={noImg} src={item.thumbnail} alt={item.name} className="char__img"/>
           <div className="char__name">{item.name}</div>
         </li>
       );
@@ -127,14 +115,14 @@ const CharList = (props) => {
     const items = allChar(charList);
 
     const errorMessage = error ? <ErrorMessage /> : null;
-    const spinner = loading ? <Spinner /> : null;
-    const content = !(loading || error) ? items : null;
+    const spinner = loading && !newItemLoading ? <Spinner /> : null;
+    
 
     return (
       <div className="char__list">
         {errorMessage}
         {spinner}
-        {content}
+        {items}
         <button
           disabled={newItemLoading}
           onClick={() => onRequest(offset)}

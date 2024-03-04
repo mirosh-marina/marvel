@@ -1,0 +1,49 @@
+@import '../../style/variables.scss';
+@import '../charList/charList.scss';
+
+.comics {
+    &__grid {			
+        display: grid;
+				margin-top: 50px;
+        grid-template-columns: repeat(4, auto);
+				grid-auto-rows: auto;
+				justify-content: start;				
+        column-gap: 66.6px;
+        row-gap: 55px;
+    }
+		
+    &__item {
+			@extend .char__item;
+        width: 225px;
+        min-height: 415px;
+				overflow: visible;
+				display: flex;
+				flex-direction: column;				
+        background-color: $white;
+				padding-top: 0;
+				
+        img {
+					@extend .char__img;					
+            width: 225px;
+            height: 346px;
+        }
+        &_selected {
+					@extend .char__item_selected;
+        }
+    }
+    &__name {
+			@extend .char__name;
+        font-size: 14px;
+        line-height: 16px;
+				text-align: left;
+        color: $dark;
+    }
+		&__price {
+			width: 33px;
+			height: 18px;
+			font-size: 14px;
+			line-height: 16px;
+			margin-top: 5px;
+			
+		}
+}
