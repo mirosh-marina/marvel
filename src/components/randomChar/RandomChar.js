@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Spinner from "../spinner/Spinner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import useMarvelService from "../../services/MarvelService";
@@ -7,22 +8,21 @@ import "../randomChar/randomChar.scss";
 import mjolnir from "../../resources/img/mjolnir.png";
 
 const RandomChar = () => {
+  const [char, setChar] = useState({});
 
-  const [char, setChar] = useState({});  
-
-  const {loading, error, getCharacter, cleanError} = useMarvelService();
+  const { loading, error, getCharacter, cleanError } = useMarvelService();
 
   useEffect(() => {
     updateChar();
   }, []);
 
-  const onCharLoaded = (char) => {					
-    setChar(char);    
-  };  
+  const onCharLoaded = (char) => {
+    setChar(char);
+  };
 
-  const updateChar = () => {		
+  const updateChar = () => {
     const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-		cleanError();
+    cleanError();
     getCharacter(id).then(onCharLoaded);
   };
 
@@ -65,12 +65,20 @@ const View = ({ char }) => {
   } = char;
 
   return (
-    <div className="randomchar__block">
-      <img
+    <motion.div
+      className="randomchar__block"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: .5 }}
+    >
+      <motion.img
         src={thumbnail}
         alt="Random character"
         style={noThumbnailOne || noThumbnailTwo ? { objectFit: "fill" } : null}
         className="randomchar__img"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: .5 }}
       />
       <div className="randomchar__info">
         <p className="randomchar__name">{name}</p>
@@ -86,7 +94,7 @@ const View = ({ char }) => {
           </a>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

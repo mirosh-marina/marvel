@@ -1,6 +1,7 @@
 import "../charList/charList.scss";
 import useMarvelService from "../../services/MarvelService";
 import React, { useState, useEffect, useRef } from "react";
+import { motion } from 'framer-motion';
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import Spinner from "../spinner/Spinner";
 import PropTypes from "prop-types";
@@ -88,7 +89,12 @@ const CharList = (props) => {
         noImg = null;
       }
       return (
-        <li
+				
+        
+					<motion.li
+					initial={{opacity: 0}}
+					animate={{opacity: 1}}
+					transition={{duration: 1}}
           key={item.id}
           tabIndex={0}
           ref={el => itemRefs.current[index] = el}
@@ -106,7 +112,9 @@ const CharList = (props) => {
         >
           <img style={noImg} src={item.thumbnail} alt={item.name} className="char__img"/>
           <div className="char__name">{item.name}</div>
-        </li>
+        </motion.li>
+				
+				
       );
     });
     return <ul className="char__grid">{elements}</ul>;

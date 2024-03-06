@@ -1,29 +1,38 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
 import AppHeader from "../appHeader/AppHeader";
-import { MainPage, ComicsPage, Page404, SingleComicsPage } from "../pages";
+import Spinner from "../spinner/Spinner";
 
+// отдельно импортируем, для того чтобы импорт был default для использования lazy
+const Page404 = lazy(() => import("../pages/404"));
+const MainPage = lazy(() => import("../pages/MainPage"));
+const ComicsPage = lazy(() => import("../pages/ComicsPage"));
+const SingleComicsPage = lazy(() => import("../pages/SingleComicsPage"));
 
-const App = () => { 
+const App = () => {
   return (
     <Router>
       <div className="app">
         <AppHeader />
-        <Switch>
-          <Route exact path="/">
-            <main>
-              <MainPage />
-            </main>
-          </Route>
-          <Route exact path="/comics">
-            <ComicsPage />
-          </Route>
-          <Route exact path="/comics/:comicsId">
-            <SingleComicsPage />
-          </Route>
-					<Route path="*">
-						<Page404 />
-					</Route>
-        </Switch>
+        <main>
+          <Suspense fallback={<Spinner />}>
+            <Switch>
+              <Route exact path="/">
+                <MainPage />
+              </Route>
+              <Route exact path="/comics">
+                <ComicsPage />
+              </Route>
+              <Route exact path="/comics/:comicsId">
+                <SingleComicsPage />
+              </Route>
+              <Route path="*">
+                <Page404 />
+              </Route>
+            </Switch>
+          </Suspense>
+        </main>
       </div>
     </Router>
   );

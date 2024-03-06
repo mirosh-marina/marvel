@@ -1,6 +1,7 @@
 import "../comicsList/comicsList.scss";
 import useMarvelService from "../../services/MarvelService";
 import { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion"; 
 import { Link } from "react-router-dom";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import Spinner from "../spinner/Spinner";
@@ -75,8 +76,11 @@ const ComicsList = () => {
   function allComics(arr) {
     const elements = arr.map((item, index) => {
       return (
-        <li
+        <motion.li
           className="comics__item"
+					initial={{opacity: 0}}
+					animate={{opacity: 1}}
+					transition={{duration: 1}}
           key={index}
           tabIndex={0}
           ref={(el) => (itemRefs.current[index] = el)}
@@ -96,7 +100,7 @@ const ComicsList = () => {
             <div className="comics__name">{item.title}</div>
             <div className="comics__price">{item.price}$</div>
           </Link>
-        </li>
+        </motion.li>
       );
     });
     return <ul className="comics__grid">{elements}</ul>;
