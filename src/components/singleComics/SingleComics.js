@@ -2,6 +2,7 @@ import "../singleComics/singleComics.scss";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link, useParams } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import useMarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/Spinner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
@@ -52,6 +53,11 @@ const View = ({ comicsInfo }) => {
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
+      <Helmet>
+        <meta name="description" content={`${title} comics book`} />
+        <title>{title}</title>
+      </Helmet>
+
       <img className="single-comics__img" src={thumbnail} alt={title} />
       <div className="single-comics__info">
         <div className="single-comics__info__title">{title}</div>

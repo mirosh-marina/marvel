@@ -13,8 +13,8 @@ const CustomForm = (props) => {
 
 	const { findCharacter } = useMarvelService();	
 
-	const handleSubmit = (values) => {				
-		console.log(values.name);
+	const handleSubmit = (values) => {			
+		
 		findCharacter(values.name.split(' ').join('%20'))
 			.then(res => {
 				setFindChar(res);
