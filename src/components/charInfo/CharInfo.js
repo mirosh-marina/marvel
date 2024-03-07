@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import Spinner from "../spinner/Spinner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
+import CustomForm from "../form/Form";
 import useMarvelService from "../../services/MarvelService";
 import Skeleton from "../skeleton/Skeleton";
 import PropTypes from "prop-types";
@@ -30,8 +31,9 @@ const CharInfo = (props) => {
 
   const onCharLoaded = (char) => {
     setChar(char);
-    console.log(char);
+    
   };
+
 
   const skeleton = char || loading || error ? null : <Skeleton />;
   const errorMessage = error ? <ErrorMessage /> : null;
@@ -39,12 +41,17 @@ const CharInfo = (props) => {
   const content = !(loading || error || !char) ? <View char={char} /> : null;
 
   return (
+		<>
     <div className="char__info">
       {skeleton}
       {errorMessage}
       {spinner}
       {content}
     </div>
+		{/* <div className="char__form">
+			<CustomForm />
+		</div> */}
+		</>
   );
 };
 

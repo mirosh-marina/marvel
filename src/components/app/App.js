@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { useState } from "react";
 
 import AppHeader from "../appHeader/AppHeader";
 import Spinner from "../spinner/Spinner";
@@ -9,8 +10,19 @@ const Page404 = lazy(() => import("../pages/404"));
 const MainPage = lazy(() => import("../pages/MainPage"));
 const ComicsPage = lazy(() => import("../pages/ComicsPage"));
 const SingleComicsPage = lazy(() => import("../pages/SingleComicsPage"));
+const SingleCharPage = lazy(() => import('../pages/SingleCharPage'));
+
+
+
 
 const App = () => {
+
+	const [findedChar, setFindedChar] = useState(null);
+
+  const onCharFinded = (char) => {
+    setFindedChar(char);
+  };
+	
   return (
     <Router>
       <div className="app">
@@ -19,13 +31,16 @@ const App = () => {
           <Suspense fallback={<Spinner />}>
             <Switch>
               <Route exact path="/">
-                <MainPage />
+                <MainPage onCharFinded={onCharFinded} />
               </Route>
               <Route exact path="/comics">
                 <ComicsPage />
               </Route>
               <Route exact path="/comics/:comicsId">
                 <SingleComicsPage />
+              </Route>
+              <Route exact path="/:charId">
+                <SingleCharPage charFinded={findedChar} />
               </Route>
               <Route path="*">
                 <Page404 />
