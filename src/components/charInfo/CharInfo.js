@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import Spinner from "../spinner/Spinner";
-import ErrorMessage from "../errorMessage/ErrorMessage";
-import CustomForm from "../form/Form";
 import useMarvelService from "../../services/MarvelService";
-import Skeleton from "../skeleton/Skeleton";
+import setContent from "../../utils/setContent";
+
 import PropTypes from "prop-types";
 
 import "../charInfo/charInfo.scss";
@@ -13,7 +11,7 @@ import "../charInfo/charInfo.scss";
 const CharInfo = (props) => {
   const [char, setChar] = useState(null);
 
-  const { loading, error, getCharacter, cleanError } = useMarvelService();
+  const { getCharacter, cleanError, process, setProcess } = useMarvelService();
 
   useEffect(() => {
     updateChar();
@@ -26,7 +24,9 @@ const CharInfo = (props) => {
     }
 
     cleanError();
-    getCharacter(charId).then(onCharLoaded);
+    getCharacter(charId)
+				.then(onCharLoaded)
+				.then(() => setProcess('confirmed'));
   };
 
   const onCharLoaded = (char) => {
@@ -34,29 +34,30 @@ const CharInfo = (props) => {
     
   };
 
+	
 
-  const skeleton = char || loading || error ? null : <Skeleton />;
-  const errorMessage = error ? <ErrorMessage /> : null;
-  const spinner = loading ? <Spinner /> : null;
-  const content = !(loading || error || !char) ? <View char={char} /> : null;
+	// СТАРЫЙ подход без использования принципа конечного автомата!
+
+  // const skeleton = char || loading || error ? null : <Skeleton />;
+  // const errorMessage = error ? <ErrorMessage /> : null;
+  // const spinner = loading ? <Spinner /> : null;
+  // const content = !(loading || error || !char) ? <View char={char} /> : null;
 
   return (
 		<>
     <div className="char__info">
-      {skeleton}
+      {/* {skeleton}
       {errorMessage}
       {spinner}
-      {content}
-    </div>
-		{/* <div className="char__form">
-			<CustomForm />
-		</div> */}
+      {content} */}
+			{setContent(process, View, char)}
+    </div>		
 		</>
   );
 };
 
-const View = ({ char }) => {
-  const { name, description, thumbnail, homepage, wiki, comics } = char;
+const View = ({ data }) => {
+  const { name, description, thumbnail, homepage, wiki, comics } = data;
 
   const listVariants = {
     visible: (i) => ({
