@@ -8,15 +8,14 @@ import PropTypes from "prop-types";
 
 const CharList = (props) => {
 	
-	const [charList, setCharList] = useState([]);	
-	const [comicsList, setComicsList] = useState([]);	
+	const [charList, setCharList] = useState([]);		
 	const [newItemLoading, setNewItemLoading] = useState(true);
 	const [offset, setOffset] = useState(210);
 	const [charEnded, setCharEnded] = useState(false);
 	const [pageEnded, setPageEnded] = useState(false);
 
 
-  const {loading, error, getAllCharacters, getAllComics} = useMarvelService();
+  const {loading, error, getAllCharacters} = useMarvelService();
 
 	useEffect(() => {
 		onRequest(offset, true);
@@ -24,11 +23,11 @@ const CharList = (props) => {
 		return () => window.removeEventListener("scroll", autoButtonByScroll);
 	},[]); 
 
-	useEffect (() => {
-		return () => {
-			onRequest(offset)
-		}
-	}, [])
+	// useEffect (() => {
+	// 	return () => {
+	// 		onRequest(offset)
+	// 	}
+	// }, [])
 
 	useEffect(() => {
 		if (pageEnded) {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import useMarvelService from "../../services/MarvelService";
 import setContent from "../../utils/setContent";
@@ -109,7 +109,7 @@ const View = ({ data }) => {
 
   return (
     <>
-      <AnimatePresence>
+      
         <motion.div
           className="char__basics"
           initial={{ opacity: 0 }}
@@ -132,7 +132,7 @@ const View = ({ data }) => {
         <div className="char__descr">{description}</div>
         <div className="char__comics">Comics:</div>
         <ul className="char__comics-list">{checkComics}</ul>
-      </AnimatePresence>
+      
     </>
   );
 };
