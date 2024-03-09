@@ -23,11 +23,11 @@ const CharList = (props) => {
 		return () => window.removeEventListener("scroll", autoButtonByScroll);
 	},[]); 
 
-	// useEffect (() => {
-	// 	return () => {
-	// 		onRequest(offset)
-	// 	}
-	// }, [])
+	useEffect (() => {
+		return () => {
+			onRequest(offset)
+		}
+	}, [])
 
 	useEffect(() => {
 		if (pageEnded) {
@@ -38,7 +38,7 @@ const CharList = (props) => {
   const autoButtonByScroll = () => {
     if (
       window.scrollY + document.documentElement.clientHeight >=
-      document.documentElement.scrollHeight
+      document.documentElement.scrollHeight - 5
     ) {		
       setNewItemLoading(true);
 			setPageEnded(true);

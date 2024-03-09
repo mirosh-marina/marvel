@@ -19,7 +19,7 @@ const useMarvelService = () => {
   // 	}
   // };
 
-  const { request, cleanError, process, setProcess } = useHttp();
+  const { request, cleanError, process, setProcess, loading, error } = useHttp();
 
   const _apiBase = "https://gateway.marvel.com:443/v1/public/";
   const _apiKey2 = "apikey=5e2f50af05b94fe0fac2af8c17500352";
@@ -103,7 +103,9 @@ const useMarvelService = () => {
 		setProcess,
     getAllComics,
 		getComics,
-		findCharacter
+		findCharacter,
+		loading,
+		error
   };
 };
 

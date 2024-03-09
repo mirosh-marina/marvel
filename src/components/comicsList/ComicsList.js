@@ -8,15 +8,15 @@ import Spinner from "../spinner/Spinner";
 
 const ComicsList = () => {
   const [comicsList, setComicsList] = useState([]);
-  const [newItemLoading, setNewItemLoading] = useState(true);
+  const [newItemLoading, setNewItemLoading] = useState(false);
   const [offset, setOffset] = useState(100);
   const [comicsEnded, setComicsEnded] = useState(false);
   const [pageEnded, setPageEnded] = useState(false);	
 
   const { loading, error, getAllComics} = useMarvelService();
 
-  useEffect(() => {
-    onRequest(offset);
+  useEffect(() => {		
+    onRequest(offset);		
     window.addEventListener("scroll", autoButtonByScroll);
     return () => window.removeEventListener("scroll", autoButtonByScroll);
   }, []);
